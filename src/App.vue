@@ -4,8 +4,14 @@
       <div
         class="my-20 rounded-xl shadow-xl max-w-sm mx-auto bg-white px-5 py-10"
       >
-        <h3 class="mb-8 text-center text-green-700">Mixvoip</h3>
         <form>
+          <select v-model="$i18n.locale">
+            <option v-for="(lang, i) in langs" :key="`lang-${i}`" :value="lang">
+              {{ lang }}
+            </option>
+          </select>
+          <h3 class="mb-8 text-center text-green-700">Mixvoip</h3>
+
           <div class="w-full">
             <video class="rounded-2xl" ref="videoRef" autoplay="true" />
           </div>
@@ -66,10 +72,18 @@
             ></select>
           </div>
 
+          <hr class="w-0 mt-8" />
+
+          <hr />
+
           <button
             class="w-full mt-8 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
           >
-            Join Meeting
+            {{
+              $t("message.value", {
+                value: "Join Meeting",
+              })
+            }}
           </button>
         </form>
       </div>
@@ -83,6 +97,12 @@ import { ref } from "vue";
 export default {
   setup() {
     const videoRef = ref("");
+    const langs = ref([]);
+    langs.value.push("English");
+    langs.value.push("Bielaruskaja");
+    langs.value.push("Spanish");
+    langs.value.push("French");
+    langs.value.push("Japanese");
 
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
@@ -90,13 +110,39 @@ export default {
       });
     }
 
-    (async function allDevices() {
-      await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      let devices = await navigator.mediaDevices.enumerateDevices();
-      return devices;
-    })();
+    const messages = {
+      en: {
+        message: {
+          value: "Join Meeting",
+        },
+      },
+      be: {
+        message: {
+          value: "Далучайцеся да сустрэчы",
+        },
+      },
+      fr: {
+        message: {
+          value: "Rejoindre la réunion",
+        },
+      },
+      es: {
+        message: {
+          value: "Unirse a una reunión",
+        },
+      },
+      ja: {
+        message: {
+          value: "会議に参加する",
+        },
+      },
+    };
 
-    return { videoRef };
+    return {
+      videoRef,
+      langs,
+      messages,
+    };
   },
 };
 </script>
